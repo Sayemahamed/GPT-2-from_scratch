@@ -1,5 +1,5 @@
 tiktoken
 torch
-black
+ruff
 tqdm
 ipykernel
