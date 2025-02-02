@@ -23,7 +23,7 @@ class GPTDataset(Dataset):
     def __getitem__(self, idx):
         return self.samples[idx]
 
-def get_dataloader(text, batch_size=4, max_length=256, stride=128, shuffle=True):
+def get_dataloader(text, batch_size=4, max_length=256, stride=128, shuffle=False):
     dataset = GPTDataset(text, max_length, stride)
     return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, drop_last=True)
 
@@ -31,8 +31,11 @@ def get_dataloader(text, batch_size=4, max_length=256, stride=128, shuffle=True)
 if __name__ == "__main__":
     with open("the-verdict.txt", "r") as f:
         sample_text = f.read()
-    dataloader = get_dataloader(sample_text, batch_size=4, max_length=10, stride=5)
+    dataloader = get_dataloader(sample_text, batch_size=4, max_length=10, stride=10)
+    tok = tiktoken.get_encoding("gpt2")
     for input_ids, target_ids in dataloader:
-        print("Input IDs:\n", input_ids)
-        print("Target IDs:\n", target_ids)
-        # break  # Just show one batch for demonstration.
+        # print("Input IDs:\n", input_ids)
+        # print("Target IDs:\n", target_ids)
+        for x in input_ids:
+            print(tok.decode(x.tolist()))
+        break  # Just show one batch for demonstration.
