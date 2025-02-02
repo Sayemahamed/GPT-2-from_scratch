@@ -27,22 +27,26 @@ class MultiHeadAttention(nn.Module):
             input=torch.ones(context_length, context_length), diagonal=1
         )
         self.register_buffer(name="mask", tensor=self.mask.bool())
-    
+
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        queries:torch.Tensor=self.query_weight(x)
-        keys:torch.Tensor=self.key_weight(x)
-        values:torch.Tensor=self.value_weight(x)
+        queries: torch.Tensor = self.query_weight(x)
+        keys: torch.Tensor = self.key_weight(x)
+        values: torch.Tensor = self.value_weight(x)
 
-        b,n,_=x.shape
+        b, n, _ = x.shape
 
-        queries=queries.view(b,n,self.n_heads,self.head_dim).transpose(1,2)
-        keys=keys.view(b,n,self.n_heads,self.head_dim).transpose(1,2)
-        values=values.view(b,n,self.n_heads,self.head_dim).transpose(1,2)
+        queries = queries.view(b, n, self.n_heads, self.head_dim).transpose(1, 2)
+        keys = keys.view(b, n, self.n_heads, self.head_dim).transpose(1, 2)
+        values = values.view(b, n, self.n_heads, self.head_dim).transpose(1, 2)
 
-        scores:torch.Tensor=queries @ keys.transpose(-2,-1) / (self.head_dim**0.5)
-        scores=scores.masked_fill_(self.mask[:n,:n], float("-inf"))
-        attention: torch.Tensor=scores.softmax(dim=-1)
+        scores: torch.Tensor = queries @ keys.transpose(-2, -1) / (self.head_dim**0.5)
+        scores = scores.masked_fill_(self.mask[:n, :n], float("-inf"))
+        attention: torch.Tensor = scores.softmax(dim=-1)
 
-        context: torch.Tensor=attention @ values
-        context=context.transpose(1,2).contiguous().view(b,n,self.n_heads*self.head_dim)
+        context: torch.Tensor = attention @ values
+        context = (
+            context.transpose(1, 2)
+            .contiguous()
+            .view(b, n, self.n_heads * self.head_dim)
+        )
         return self.out_proj(context)
