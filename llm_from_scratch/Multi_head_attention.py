@@ -1,3 +1,4 @@
+from numpy import dtype
 from torch import nn
 import torch
 
@@ -23,10 +24,10 @@ class MultiHeadAttention(nn.Module):
             in_features=d_in, out_features=d_out, bias=qkv_bias
         )
         self.out_proj = nn.Linear(in_features=d_out, out_features=d_out)
-        self.mask: torch.Tensor = torch.triu(
-            input=torch.ones(context_length, context_length), diagonal=1
+        self.msk: torch.Tensor = torch.triu(
+            input=torch.ones(context_length, context_length), diagonal=1,
         )
-        self.register_buffer(name="mask", tensor=self.mask.bool())
+        self.register_buffer(name="mask", tensor=self.msk.bool())
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         queries: torch.Tensor = self.query_weight(x)
@@ -40,7 +41,7 @@ class MultiHeadAttention(nn.Module):
         values = values.view(b, n, self.n_heads, self.head_dim).transpose(1, 2)
 
         scores: torch.Tensor = queries @ keys.transpose(-2, -1) / (self.head_dim**0.5)
-        scores = scores.masked_fill_(self.mask[:n, :n], float("-inf"))
+        scores = scores.masked_fill_(self.msk[:n, :n].bool(), float("-inf"))
         attention: torch.Tensor = scores.softmax(dim=-1)
 
         context: torch.Tensor = attention @ values

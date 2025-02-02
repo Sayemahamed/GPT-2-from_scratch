@@ -5,7 +5,7 @@ from utilities_layers import LayerNorm
 
 
 class Model(nn.Module):
-    def init(
+    def __init__(
         self,
         embed_dim: int,
         context_length: int,
@@ -49,11 +49,3 @@ class Model(nn.Module):
         return logits
 
 
-model = Model(
-    vocab_size=50257,
-    context_length=256,
-    embed_dim=768,
-    transformer_layers=4,
-    n_heads=12,
-    qkb_bias=False,
-)

@@ -1,5 +1,4 @@
-from typing import Any
-from GPT import model  # assuming these are defined in GPT.py
+from GPT import Model  
 from data_Processor import create_dataloader
 import torch
 from torch import nn
@@ -7,6 +6,13 @@ import tiktoken
 from torch.utils.data import DataLoader
 from torch import optim
 
+model = Model(
+    context_length=256,
+    embed_dim=768,
+    transformer_layers=4,
+    n_heads=4,
+    qkb_bias=False,
+)
 
 
 def generate_text(model: nn.Module, idx: torch.Tensor, max_new_tokens: int, context_size: int) -> torch.Tensor:
