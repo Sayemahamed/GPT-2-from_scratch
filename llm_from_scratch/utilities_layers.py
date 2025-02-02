@@ -19,7 +19,7 @@ class FeedForward(nn.Module):
     def __init__(self, embed_dim: int, hidden_dim: int | None) -> None:
         super().__init__()
         if hidden_dim is None:
-            hidden_dim = 8 * embed_dim
+            hidden_dim = 2 * embed_dim
         self.linear1 = nn.Linear(in_features=embed_dim, out_features=hidden_dim)
         self.linear2 = nn.Linear(in_features=hidden_dim, out_features=hidden_dim)
         self.linear3 = nn.Linear(in_features=hidden_dim, out_features=embed_dim)
