@@ -3,3 +3,4 @@ torch
 ruff
 tqdm
 ipykernel
+numpy
