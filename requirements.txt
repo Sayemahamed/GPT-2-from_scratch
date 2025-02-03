@@ -6,3 +6,5 @@ ipykernel
 numpy
 groq
 rich
+langchain-groq
+langchain
