@@ -35,7 +35,10 @@ Example call:
   <tool> calculate </tool> <parameter> (2+2)/4 </parameter>
 </action>
 Weather Information: Use the weather tool to fetch real-time weather details.
-Example call:\n <action> \n  <tool> weather </tool> <parameter>  New York </parameter> \n </action>
+Example call:
+<action> 
+     <tool> weather </tool> <parameter>  New York </parameter> 
+</action>
 Your goal is to respond accurately and concisely while maintaining a friendly and helpful tone.""",
     },
     {
@@ -52,10 +55,12 @@ chat_completion: ChatCompletion = client.chat.completions.create(
     messages=messages,
     model="llama-3.3-70b-versatile",
 )
+text = chat_completion.choices[0].message.content
 def extract_actions(text):
     pattern = r"<action>[\s\S]*?</action>"  
     return re.findall(pattern, text) 
 
+actions = extract_actions(text)
 # rich.print(chat_completion)
 
 def parse_action(action_str):
@@ -68,3 +73,13 @@ def parse_action(action_str):
         return {"error": f"Failed to parse action: {e}"}
 
 
+for action in actions:
+    parsed_action = parse_action(action)
+    if parsed_action["tool"] == "calculate":
+        expression: str = parsed_action["parameter"]
+        result = calculate(expression)
+        print(f"Result: {result}")
+    elif parsed_action["tool"] == "weather":
+        location: str = parsed_action["parameter"]
+        result: str = weather(location)
+        print(f"Result: {result}")
