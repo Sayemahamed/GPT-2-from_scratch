@@ -1,4 +1,3 @@
-from numpy import dtype
 from torch import nn
 import torch
 

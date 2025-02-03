@@ -4,3 +4,4 @@ ruff
 tqdm
 ipykernel
 numpy
+groq
