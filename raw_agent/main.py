@@ -1,6 +1,8 @@
 from groq import Groq
 from groq.types.chat.chat_completion import ChatCompletion
 import rich
+from xml.etree import ElementTree as ET
+import re
 client = Groq()
 
 # chat_completion: ChatCompletion = client.chat.completions.create(
@@ -50,6 +52,19 @@ chat_completion: ChatCompletion = client.chat.completions.create(
     messages=messages,
     model="llama-3.3-70b-versatile",
 )
+def extract_actions(text):
+    pattern = r"<action>[\s\S]*?</action>"  
+    return re.findall(pattern, text) 
 
-rich.print(chat_completion)
+# rich.print(chat_completion)
+
+def parse_action(action_str):
+    try:
+        root = ET.fromstring(action_str)
+        tool = root.find("tool").text.strip()
+        parameter = root.find("parameter").text.strip()
+        return {"tool": tool, "parameter": parameter}
+    except Exception as e:
+        return {"error": f"Failed to parse action: {e}"}
+
 
