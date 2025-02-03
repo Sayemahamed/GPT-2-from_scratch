@@ -47,5 +47,3 @@ class Model(nn.Module):
         x = self.layer_norm(x)
         logits = self.lm_head(x)
         return logits
-
-

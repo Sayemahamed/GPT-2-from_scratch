@@ -3,7 +3,9 @@ from groq.types.chat.chat_completion import ChatCompletion
 import rich
 from xml.etree import ElementTree as ET
 import re
+
 client = Groq()
+
 
 # chat_completion: ChatCompletion = client.chat.completions.create(
 #     messages=[
@@ -16,13 +18,16 @@ client = Groq()
 # )
 # rich.print(chat_completion)
 # rich.print(chat_completion.choices[0].message.tool_calls)
-def calculate(expression: str) :
+def calculate(expression: str):
     return eval(expression)
+
 
 # calculate("(2+2)/4")
 
-def weather(location: str) :
+
+def weather(location: str):
     return f"The weather in {location} is sunny"
+
 
 messages = [
     {
@@ -56,12 +61,16 @@ chat_completion: ChatCompletion = client.chat.completions.create(
     model="llama-3.3-70b-versatile",
 )
 text = chat_completion.choices[0].message.content
+
+
 def extract_actions(text):
-    pattern = r"<action>[\s\S]*?</action>"  
-    return re.findall(pattern, text) 
+    pattern = r"<action>[\s\S]*?</action>"
+    return re.findall(pattern, text)
+
 
 actions = extract_actions(text)
 # rich.print(chat_completion)
+
 
 def parse_action(action_str):
     try:

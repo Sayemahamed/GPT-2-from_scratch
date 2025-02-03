@@ -24,7 +24,8 @@ class MultiHeadAttention(nn.Module):
         )
         self.out_proj = nn.Linear(in_features=d_out, out_features=d_out)
         self.msk: torch.Tensor = torch.triu(
-            input=torch.ones(context_length, context_length), diagonal=1,
+            input=torch.ones(context_length, context_length),
+            diagonal=1,
         )
         self.register_buffer(name="mask", tensor=self.msk.bool())
 

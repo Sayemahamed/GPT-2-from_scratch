@@ -8,3 +8,4 @@ groq
 rich
 langchain-groq
 langchain
+langchain_community
